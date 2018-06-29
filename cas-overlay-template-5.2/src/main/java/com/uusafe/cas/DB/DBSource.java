@@ -21,6 +21,8 @@ public class DBSource {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
     }
 
+    public JdbcTemplate getJdbcTemplate() { return jdbcTemplate; }
+
     public Connection getConnection()throws SQLException
     {
         return this.jdbcTemplate.getDataSource().getConnection();

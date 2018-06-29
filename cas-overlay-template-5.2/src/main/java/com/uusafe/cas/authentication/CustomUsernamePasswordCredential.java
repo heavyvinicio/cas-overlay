@@ -20,7 +20,7 @@ public class CustomUsernamePasswordCredential extends UsernamePasswordCredential
     public CustomUsernamePasswordCredential() {}
 
     public CustomUsernamePasswordCredential(String company, String userName, String password, String authcode) {
-        super(userName, password);
+//        super(userName, password);
         this.company = company;
         this.authcode = authcode;
     }

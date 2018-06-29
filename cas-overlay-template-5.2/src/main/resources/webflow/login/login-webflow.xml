@@ -4,8 +4,6 @@
       xsi:schemaLocation="http://www.springframework.org/schema/webflow
                           http://www.springframework.org/schema/webflow/spring-webflow.xsd">
 
-    <var name="credential" class="com.uusafe.cas.authentication.CustomUsernamePasswordCredential"/>
-
     <action-state id="initialAuthenticationRequestValidationCheck">
         <evaluate expression="initialAuthenticationRequestValidationAction"/>
         <transition on="authenticationFailure" to="handleAuthenticationFailure"/>

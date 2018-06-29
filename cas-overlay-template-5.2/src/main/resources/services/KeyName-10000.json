@@ -1,0 +1,13 @@
+{
+  "@class" : "org.apereo.cas.support.oauth.services.OAuthRegisteredService",
+  "clientId": "10000",
+  "clientSecret": "22222",
+  "bypassApprovalPrompt": false,
+  "generateRefreshToken": false,
+  "serviceId" : "https://mos.zhizhangyi.com",
+  "name" : "KeyName",
+  "id" : 10000,
+  "attributeReleasePolicy" : {
+    "@class" : "org.apereo.cas.services.ReturnAllAttributeReleasePolicy"
+  }
+}
