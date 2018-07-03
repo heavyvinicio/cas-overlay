@@ -15,15 +15,19 @@
     <link rel="stylesheet" th:href="@{${#themes.code('standard.custom.css.file')}}"/>
     <link rel="stylesheet" th:href="@{${#themes.code('standard.custom.css.font.file')}}"/>
     <link rel="stylesheet" th:href="@{${#themes.code('standard.custom.css.uusafe.file')}}"/>
+    <link rel="stylesheet" th:href="@{${#themes.code('standard.custom.css.unlock.file')}}"/>
+
 
     <link rel="icon" th:href="@{/favicon.ico}" type="image/x-icon"/>
-
     <script type="text/javascript" th:src="@{#{webjars.zxcvbn.js}}"></script>
     <script type="text/javascript" th:src="@{#{webjars.jquerymin.js}}"></script>
     <script type="text/javascript" th:src="@{#{webjars.jqueryui.js}}"></script>
     <script type="text/javascript" th:src="@{#{webjars.jquerycookie.js}}"></script>
+
     <script src="//www.google.com/recaptcha/api.js" async defer th:if="${recaptchaSiteKey}"></script>
-    <script th:src="@{#{webjars.bootstrapmin.js}}"></script>
+
+    <script type="text/javascript" th:src="@{${#themes.code('cas.javascript.unlock.file')}}"></script>
+    <script type="text/javascript" th:src="@{${#themes.code('cas.javascript.hullabaloo.file')}}"></script>
 
     <script th:inline="javascript">
         /*<![CDATA[*/

@@ -94,6 +94,11 @@
             </div>
         </section>
 
+        <div class="wrapper">
+            <div class="bar bar1" style="height: 40px; margin-top: -5px;"></div>
+        </div>
+
+
         <!--<section class="row check">-->
             <!--<p th:if="${passwordManagementEnabled}">-->
                 <!--<input type="checkbox" name="doChangePassword" id="doChangePassword" value="true" th:checked="${param.doChangePassword != null}" tabindex="4"/>-->
@@ -138,13 +143,35 @@
         <!--<span th:utext="#{screen.pm.button.forgotpwd}"/>-->
         <!--<p/>-->
     <!--</div>-->
-
     <script type="text/javascript" th:inline="javascript">
+        const Verification = {
+            code : false
+        };
+
+        $('.bar1').slideToUnlock({
+            text : '滑动滚动条',
+            succText : '验证通过',
+            progressColor : '#0d5d13',
+            succColor : '#0d5d13',
+            textColor : '#000000',
+            succTextColor : '#fff',
+            successFunc: function() {
+                return Verification.code = true
+            }
+        });
+
         var i = [[#{screen.welcome.button.loginwip}]]
         $("#fm1").submit(function () {
+            if(Verification.code === false) {
+                $.hulla = new hullabaloo();
+                $.hulla.send("请输入验证码！", "danger");
+                return false
+            }
             $(":submit").attr("disabled", true);
             $(":submit").attr("value", i);
             return true;
         });
+
+
     </script>
 </div>
