@@ -1,11 +1,15 @@
 <div class="box" id="login">
     <div class="login-header">
-        <h2 th:text="#{cas.login.pagetitle}"></h2>
-        
-        <span class="fa-stack fa-2x hidden-xs">
-          <i class="fa fa-circle fa-stack-2x"></i>
-          <i class="fa fa-lock fa-stack-1x fa-inverse"></i>
-        </span>
+        <h2 th:text="#{screen.welcome.title}" style="text-align: center;
+        font-size: 34px;
+        color: #333;
+        letter-spacing: -.58px;
+        padding-top: 27px;
+        padding-bottom: 20px;"></h2>
+        <!--<span class="fa-stack fa-2x hidden-xs">-->
+          <!--<i class="fa fa-circle fa-stack-2x"></i>-->
+          <!--<i class="fa fa-lock fa-stack-1x fa-inverse"></i>-->
+        <!--</span>-->
     </div>
 
     <form method="post" id="fm1" th:object="${credential}" action="login">
@@ -18,28 +22,40 @@
 
 
         <section class="row">
-            <label for="company" th:utext="#{screen.welcome.label.netid}"/>
-            <input class="required" id="company" size="25"
-               tabindex="1" type="text" th:disabled="${guaEnabled}" th:field="*{company}"
-           th:accesskey="#{screen.welcome.label.netid.accesskey}"
-                       autocomplete="off"/>
+            <!--<label for="company" th:utext="#{screen.welcome.label.netid}"/>-->
+            <span class="login iconSpan">
+                <i class="iconfont icon-icon-test login iconLi"></i>
+            </span>
+            <input class="required uusafe"
+                   id="company"
+                   size="25"
+                   tabindex="1"
+                   type="text"
+                   th:disabled="${guaEnabled}"
+                   th:field="*{company}"
+                   th:accesskey="#{screen.welcome.label.company.accesskey}"
+                   th:placeholder="#{screen.welcome.label.company}"
+                   autocomplete="off"/>
         </section>
 
 
         <section class="row">
-            <label for="username" th:utext="#{screen.welcome.label.netid}"/>
+            <!--<label for="username" th:utext="#{screen.welcome.label.netid}"/>-->
 
-            <div th:if="${openIdLocalId}">
-                <strong>
-                    <span th:utext="${openIdLocalId}"/>
-                </strong>
-                <input type="hidden"
-                       id="username"
-                       name="username"
-                       th:value="${openIdLocalId}"/>
-            </div>
-            <div th:unless="${openIdLocalId}">
-                <input class="required"
+            <!--<div th:if="${openIdLocalId}">-->
+                <!--<strong>-->
+                    <!--<span th:utext="${openIdLocalId}"/>-->
+                <!--</strong>-->
+                <!--<input type="hidden"-->
+                       <!--id="username"-->
+                       <!--name="username"-->
+                       <!--th:value="${openIdLocalId}"/>-->
+            <!--</div>-->
+            <!--<div th:unless="${openIdLocalId}">-->
+            <span class="login iconSpan">
+                <i class="iconfont icon-yonghu login iconLi"></i>
+            </span>
+                <input class="required uusafe"
                        id="username"
                        size="25"
                        tabindex="1"
@@ -47,22 +63,28 @@
                        th:disabled="${guaEnabled}"
                        th:field="*{username}"
                        th:accesskey="#{screen.welcome.label.netid.accesskey}"
+                       th:placeholder="#{screen.welcome.label.netid}"
                        autocomplete="off"/>
-            </div>
+            <!--</div>-->
         </section>
 
         <section class="row">
-            <label for="password" th:utext="#{screen.welcome.label.password}"/>
+            <!--<label for="password" th:utext="#{screen.welcome.label.password}"/>-->
 
             <div>
-                <input class="required"
+                <span class="login iconSpan">
+                    <i class="iconfont icon-mima login iconLi"></i>
+                </span>
+                <input class="required uusafe"
                        type="password"
                        id="password"
                        size="25"
                        tabindex="2"
                        th:accesskey="#{screen.welcome.label.password.accesskey}"
                        th:field="*{password}"
-                       autocomplete="off"/>
+                       th:placeholder="#{screen.welcome.label.password}"
+                       autocomplete="off"
+                />
                 <span id="capslock-on" style="display:none;">
                     <p>
                         <i class="fa fa-exclamation-circle"></i>
@@ -72,19 +94,19 @@
             </div>
         </section>
 
-        <section class="row check">
-            <p th:if="${passwordManagementEnabled}">
-                <input type="checkbox" name="doChangePassword" id="doChangePassword" value="true" th:checked="${param.doChangePassword != null}" tabindex="4"/>
-                <label for="doChangePassword" th:text="#{screen.button.changePassword}"/>
-            </p>
-        </section>
+        <!--<section class="row check">-->
+            <!--<p th:if="${passwordManagementEnabled}">-->
+                <!--<input type="checkbox" name="doChangePassword" id="doChangePassword" value="true" th:checked="${param.doChangePassword != null}" tabindex="4"/>-->
+                <!--<label for="doChangePassword" th:text="#{screen.button.changePassword}"/>-->
+            <!--</p>-->
+        <!--</section>-->
 
-        <section class="row check">
-            <p th:if="${rememberMeAuthenticationEnabled}">
-                <input type="checkbox" name="rememberMe" id="rememberMe" value="true" tabindex="5"/>
-                <label for="rememberMe" th:text="#{screen.rememberme.checkbox.title}"/>
-            </p>
-        </section>
+        <!--<section class="row check">-->
+            <!--<p th:if="${rememberMeAuthenticationEnabled}">-->
+                <!--<input type="checkbox" name="rememberMe" id="rememberMe" value="true" tabindex="5"/>-->
+                <!--<label for="rememberMe" th:text="#{screen.rememberme.checkbox.title}"/>-->
+            <!--</p>-->
+        <!--</section>-->
 
         <section class="row" th:if="${recaptchaSiteKey}">
             <div class="g-recaptcha" th:attr="data-sitekey=${recaptchaSiteKey}"/>
@@ -104,19 +126,18 @@
         </section>
     </form>
 
-    <form th:if="${passwordManagementEnabled}" method="post" id="passwordManagementForm">
-        <input type="hidden" name="execution" th:value="${flowExecutionKey}"/>
-        <input type="hidden" name="_eventId" value="resetPassword"/>
-        <span class="fa fa-unlock"></span>
-        <a th:utext="#{screen.pm.button.resetPassword}" href="javascript:void(0)" onclick="$('#passwordManagementForm').submit();"/>
-        <p/>
-    </form>
-
-    <div th:unless="${passwordManagementEnabled}">
-        <span class="fa fa-question-circle"></span>
-        <span th:utext="#{screen.pm.button.forgotpwd}"/>
-        <p/>
-    </div>
+    <!--<form th:if="${passwordManagementEnabled}" method="post" id="passwordManagementForm">-->
+        <!--<input type="hidden" name="execution" th:value="${flowExecutionKey}"/>-->
+        <!--<input type="hidden" name="_eventId" value="resetPassword"/>-->
+        <!--<span class="fa fa-unlock"></span>-->
+        <!--<a th:utext="#{screen.pm.button.resetPassword}" href="javascript:void(0)" onclick="$('#passwordManagementForm').submit();"/>-->
+        <!--<p/>-->
+    <!--</form>-->
+    <!--<div th:unless="${passwordManagementEnabled}">-->
+        <!--<span class="fa fa-question-circle"></span>-->
+        <!--<span th:utext="#{screen.pm.button.forgotpwd}"/>-->
+        <!--<p/>-->
+    <!--</div>-->
 
     <script type="text/javascript" th:inline="javascript">
         var i = [[#{screen.welcome.button.loginwip}]]
@@ -126,5 +147,4 @@
             return true;
         });
     </script>
-    <div th:replace="fragments/loginsidebar"/>
 </div>

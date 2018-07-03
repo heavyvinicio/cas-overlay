@@ -13,6 +13,8 @@
     <link type="text/css" rel="stylesheet" th:href="@{#{webjars.latomin.css}}"/>
 
     <link rel="stylesheet" th:href="@{${#themes.code('standard.custom.css.file')}}"/>
+    <link rel="stylesheet" th:href="@{${#themes.code('standard.custom.css.font.file')}}"/>
+    <link rel="stylesheet" th:href="@{${#themes.code('standard.custom.css.uusafe.file')}}"/>
 
     <link rel="icon" th:href="@{/favicon.ico}" type="image/x-icon"/>
 
@@ -45,9 +47,12 @@
 </head>
 
 <body>
-<div id="container" class="container">
-    <div th:replace="fragments/logo"/>
-    <div layout:fragment="content" id="content">
+<div id="container" class="container" style="position: relative;height: 100%;
+                max-width: 1280px;
+
+                margin: 0 auto;">
+    <!--<div th:replace="fragments/logo"/>-->
+    <div layout:fragment="content" id="content" style="position: relative;top: 20%;">
         <h1/>
         <p/>
     </div>

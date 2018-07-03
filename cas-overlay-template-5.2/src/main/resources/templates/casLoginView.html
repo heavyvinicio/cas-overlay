@@ -8,7 +8,7 @@
 <body id="cas" class="login">
     <div layout:fragment="content">
         <div class="row">
-            <div id="notices" class="col-sm-12 col-md-6 col-md-push-6">
+            <div id="notices" class="col-sm-12 col-md-6 col-md-push-6" style="left: 0;">
                 <div th:replace="fragments/insecure"/>
                 <div th:replace="fragments/defaultauthn"/>
                 <div th:replace="fragments/cookies"/>
@@ -16,7 +16,8 @@
                 <div th:replace="fragments/cas-resources-list" />
                 <div th:replace="fragments/loginProviders" />
             </div>
-            <div class="col-sm-12 col-md-6 col-md-pull-6">
+
+            <div class="col-sm-12 col-md-6 col-md-pull-6" style="float: right;right: 0px;width: 385px;">
                 <div th:replace="fragments/loginform" />
             </div>
         </div>
