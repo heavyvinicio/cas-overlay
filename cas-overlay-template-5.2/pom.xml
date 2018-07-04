@@ -92,13 +92,12 @@
             <artifactId>cas-server-core-configuration</artifactId>
             <version>${cas.version}</version>
         </dependency>
+        <!--
         <dependency>
             <groupId>org.apereo.cas</groupId>
             <artifactId>cas-server-support-jpa-service-registry</artifactId>
             <version>${cas.version}</version>
         </dependency>
-
-        <!-- 添加邮箱的支持 -->
         <dependency>
             <groupId>org.apereo.cas</groupId>
             <artifactId>cas-server-support-pm-jdbc</artifactId>
@@ -110,6 +109,7 @@
             <artifactId>cas-server-support-oauth-webflow</artifactId>
             <version>${cas.version}</version>
         </dependency>
+        -->
         <dependency>
             <groupId>org.apereo.cas</groupId>
             <artifactId>cas-server-core-util</artifactId>

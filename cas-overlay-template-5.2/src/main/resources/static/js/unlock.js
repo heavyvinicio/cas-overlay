@@ -30,11 +30,18 @@
             initStyle();
 
             function initDOM() {
-                var template = '<div class="slide-to-unlock-bg"><span>' +
-                    options.text +
-                    '</span></div><div class="slide-to-unlock-progress"></div>' +
+                var template =
+                    '<div class="slide-to-unlock-bg">' +
+                    '   <span class="title">' + options.text + '</span>' +
+                    '</div>' +
+                    '<div class="slide-to-unlock-progress"></div>' +
                     '<div class="slide-to-unlock-handle">' +
-                    '<span> >> </span>' +
+                    '   <span class="arrow"> >> </span>   ' +
+                    '</div>'+
+                    '<div class="slide-to-unlock-flash">' +
+                    '   <div class="flash">' +
+                    '       <i class="iconFlash iconfont icon-shuangyoujiantou-"></i>' +
+                    '   </div>' +
                     '</div>';
                 $container.html(template);
             }
@@ -43,7 +50,7 @@
                 $container.css({
                     position: 'relative',
                 });
-                $container.find('span').css({
+                $container.find('.title').css({
                     lineHeight: options.height + 'px',
                     fontSize: options.height / 3.5,
                     color: options.textColor
@@ -65,10 +72,17 @@
                 });
                 $container.find('.slide-to-unlock-handle span').css({
                     position: 'relative',
-                    margin: '8px',
+                    margin: '9px',
                     top: '-2px',
                     color: 'rgba(0, 0, 0, 0.4)',
-                })
+                    padding: '1px'
+                });
+                $container.find('.slide-to-unlock-flash').css({
+                    width: options.width + 'px',
+                    height: options.height + 'px',
+                    overflow: 'hidden',
+                    float: 'right'
+                });
             }
         },
         bindDragEvent: function() {
@@ -78,7 +92,9 @@
             var downX;
             var $prog = $container.find('.slide-to-unlock-progress'),
                 $bg = $container.find('.slide-to-unlock-bg'),
-                $handle = $container.find('.slide-to-unlock-handle');
+                $handle = $container.find('.slide-to-unlock-handle'),
+                $flashbg  = $container.find('.slide-to-unlock-flash'),
+                $arrow   = $container.find('.arrow');
             var succMoveWidth = $bg.width() - $handle.width();
             $handle.on('mousedown', null, mousedownHandler);
 
@@ -101,9 +117,13 @@
                 var moveX = event.clientX;
                 var diffX = getLimitNumber(moveX - downX, 0, succMoveWidth);
                 $prog.width(diffX);
+
+                $flashbg.width(succMoveWidth - diffX);
+
                 $handle.css({
                     left: diffX
                 });
+
                 if (diffX === succMoveWidth) {
                     success();
                 }
@@ -118,6 +138,9 @@
                     $handle.animate({
                         left: 0
                     }, 100);
+                    $flashbg.animate({
+                        width:options.width
+                    }, 100)
                 }
                 $(document).off('mousemove', null, mousemoveHandler);
                 $(document).off('mouseup', null, mouseupHandler);
@@ -127,13 +150,23 @@
                 $prog.css({
                     backgroundColor: options.succColor,
                 });
-                $container.find('span').css({
+
+                $container.find('.title').css({
                     color: options.succTextColor
                 });
+
+                $arrow.html('');
+                $arrow.addClass('iconArrow iconfont icon-tongguo');
+
+
                 that.isSuccess = true;
-                $container.find('span').html(options.succText);
+
+                $container.find('.title').html(options.succText);
+
                 $handle.off('mousedown', null, mousedownHandler);
+
                 $(document).off('mousemove', null, mousemoveHandler);
+
                 setTimeout(function() {
                     options.successFunc && options.successFunc();
                 }, 30);

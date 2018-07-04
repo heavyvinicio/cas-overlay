@@ -3,8 +3,43 @@
 .login .iconSpan {
     position: absolute;
     line-height: 40px;
+    background-color: #c1c1c1;
+    height: 39px;
+    width: 35px;
+    border-radius: 2px;
+    padding: 1px;
 }
 
 .login .iconLi {
-    margin: 7px;
+    margin: 9px;
+}
+
+.flash{
+    width:10px;
+    height:39px;
+    position:relative;
+    animation:mymove 3s infinite;
+    -webkit-animation:mymove 3s infinite; /*Safari and Chrome*/
+}
+
+@keyframes mymove {
+    from {left:0px;}
+    to {left:400px;}
+}
+
+@-webkit-keyframes mymove /*Safari and Chrome*/ {
+    from {left:0px;}
+    to {left:400px;}
+}
+
+.iconFlash {
+    font-size: 50px;
+    top: -15px;
+    position: relative;
+    color: #b5b5b5;
+}
+
+.iconArrow {
+    color: rgb(65, 152, 50) !important;
+    margin: 8px !important;
 }
