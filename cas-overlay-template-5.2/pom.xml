@@ -92,7 +92,6 @@
             <artifactId>cas-server-core-configuration</artifactId>
             <version>${cas.version}</version>
         </dependency>
-        <!--
         <dependency>
             <groupId>org.apereo.cas</groupId>
             <artifactId>cas-server-support-jpa-service-registry</artifactId>
@@ -103,13 +102,16 @@
             <artifactId>cas-server-support-pm-jdbc</artifactId>
             <version>${cas.version}</version>
         </dependency>
-
+        <dependency>
+            <groupId>org.apereo.cas</groupId>
+            <artifactId>cas-server-support-pm-webflow</artifactId>
+            <version>${cas.version}</version>
+        </dependency>
         <dependency>
             <groupId>org.apereo.cas</groupId>
             <artifactId>cas-server-support-oauth-webflow</artifactId>
             <version>${cas.version}</version>
         </dependency>
-        -->
         <dependency>
             <groupId>org.apereo.cas</groupId>
             <artifactId>cas-server-core-util</artifactId>
@@ -125,6 +127,13 @@
             <artifactId>shiro-crypto-hash</artifactId>
             <version>1.4.0</version>
         </dependency>
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>servlet-api</artifactId>
+            <version>2.5</version>
+            <scope>provided</scope>
+        </dependency>
+
     </dependencies>
 
     <properties>

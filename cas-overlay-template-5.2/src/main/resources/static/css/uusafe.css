@@ -43,3 +43,25 @@
     color: rgb(65, 152, 50) !important;
     margin: 8px !important;
 }
+
+/**密码重置div**/
+.resetPsw {
+    background: #efefef !important;
+    float: right;
+    right: 0px;
+    top: 20% !important;
+    width: 355px !important;
+    padding: 30px !important;
+    position: relative !important;
+    box-sizing: border-box;
+    opacity: 0.88;
+}
+
+.inputCon {
+    margin-right: 0px;
+    margin-left: 0px;
+}
+
+.btnCompones {
+    margin-top: 25px;
+}

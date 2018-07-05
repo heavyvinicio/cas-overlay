@@ -98,7 +98,7 @@ public class QueryDatabaseAuthenticationHandler extends AbstractJdbcUsernamePass
             } catch (DataAccessException var10) {
                 throw new PreventedException("SQL exception while executing query for " + username, var10);
             }
-
+            LOGGER.warn("******* username [{}] ---- Principal [{}] *********" , username,attributes.toString());
             return this.createHandlerResult(credential, this.principalFactory.createPrincipal(username, attributes), (List)null);
         } else {
             throw new GeneralSecurityException("Authentication handler is not configured correctly. No SQL statement or JDBC template is found.");
