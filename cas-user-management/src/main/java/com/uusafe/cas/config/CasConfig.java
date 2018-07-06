@@ -154,7 +154,7 @@ public class CasConfig {
         }
         else
         {
-            filterRegistration.addUrlPatterns("/login");
+            filterRegistration.addUrlPatterns("/uu/login");
         }
         filterRegistration.setOrder(6);
         return filterRegistration;

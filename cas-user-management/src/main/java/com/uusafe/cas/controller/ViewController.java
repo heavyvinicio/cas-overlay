@@ -59,6 +59,7 @@ public class ViewController {
 //        model.addAttribute("attributes", attributes);
 //        System.out.println(attributes.toString());
 //        System.out.println("loginloginloginloginloginlogin");
+        System.out.println("attributes size ---- >" + attributes.size());
         if (StringUtils.isEmpty(username) || StringUtils.isEmpty(password))
         {
             return "page-login";
