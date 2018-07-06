@@ -1,9 +1,17 @@
 package com.uusafe.cas.bean;
 
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+
 /**
  * @author Zengzhx
  * @date 2018/7/5 上午11:28
  */
+
 public class User {
 
     public User() {
@@ -14,17 +22,21 @@ public class User {
     private int id;
 
     public  static final String COMPANY = "company";
-
+    
+    @NotNull
     private String company;
 
     public  static final String USERNAME = "username";
-
+    
+    @NotEmpty(message="用户名不能为空")
     private String username;
 
     public  static final String PASSWORD = "password";
 
+    @NotEmpty(message="密码不能为空")
+    @Size(min=6, max=20)
     private String password;
-
+    
     public  static final String REALNAME = "realname";
 
     private String realname;
@@ -116,4 +128,15 @@ public class User {
     public void setDisable(int disable) {
         this.disable = disable;
     }
+
+            
+	@Override
+	public String toString() {
+		return "User [id=" + id + ", company=" + company + ", username="
+				+ username + ", password=" + password + ", realname="
+				+ realname + ", email=" + email + ", lock=" + lock
+				+ ", invali=" + invali + ", disable=" + disable + "]";
+	}
+    
+    
 }
