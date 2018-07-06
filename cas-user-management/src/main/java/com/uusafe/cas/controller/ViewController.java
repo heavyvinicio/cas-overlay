@@ -1,9 +1,11 @@
 package com.uusafe.cas.controller;
 
 import com.uusafe.cas.Util.Constants;
+import com.uusafe.cas.Util.FullUser;
 import com.uusafe.cas.Util.SafePasswordEncoder;
 import com.uusafe.cas.Util.UserRowMapper;
 import com.uusafe.cas.bean.User;
+
 import org.jasig.cas.client.authentication.AttributePrincipal;
 import org.jasig.cas.client.util.AbstractCasFilter;
 import org.slf4j.Logger;
@@ -20,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
@@ -40,6 +43,9 @@ public class ViewController {
     @Autowired
     protected SafePasswordEncoder safePasswordEncoder;
 
+    @Autowired
+    protected FullUser fullUser;
+    
     /**
      * 首页
      */
@@ -55,43 +61,42 @@ public class ViewController {
                         @RequestParam(value = "password" , required = false)  String password)
     {
         AttributePrincipal principal = (AttributePrincipal) httpServletRequest.getUserPrincipal();
-        Map attributes = principal.getAttributes();
-//        model.addAttribute("attributes", attributes);
-//        System.out.println(attributes.toString());
-//        System.out.println("loginloginloginloginloginlogin");
-        if (StringUtils.isEmpty(username) || StringUtils.isEmpty(password))
+        Map<String, Object> attributes = principal.getAttributes();
+        logger.debug(" Attributes ---> [{}] ", attributes.size());
+        User user = fullUser.attributeTOBean(attributes);
+        if(user == null)
         {
-            return "page-login";
-        }
-        String encodePassword = safePasswordEncoder.encode(password);
-        User user = null;
-        try {
-            user =  jdbcTemplate.queryForObject("SELECT company, username, realname, email FROM T_User WHERE username = ? AND password = ?",
-                new String[]{username, encodePassword}, new RowMapper<User>() {
-                    @Nullable
-                    @Override
-                    public User mapRow(ResultSet resultSet, int i) throws SQLException {
-                        User user1 = new User();
-                        user1.setCompany(resultSet.getString("company"));
-                        user1.setUsername(resultSet.getString("username"));
-                        user1.setRealname(resultSet.getString("realname"));
-                        user1.setEmail(resultSet.getString("email"));
-                        return user1;
-                    }
-                });
-        }
-        catch (Exception e)
-        {
-            e.printStackTrace();
-        }
-
-        if (user == null) {
-            logger.error("Username : [{}] Is Null -----> Please Check！", username);
-            return "page-login";
-        }
+        	 if (StringUtils.isEmpty(username) || StringUtils.isEmpty(password))
+             {
+                 return "page-login";
+             }
+        	String encodePassword = safePasswordEncoder.encode(password);
+            try {
+                user =  jdbcTemplate.queryForObject("SELECT company, username, realname, email FROM T_User WHERE username = ? AND password = ?",
+                    new String[]{username, encodePassword}, new RowMapper<User>() {
+                        @Nullable
+                        @Override
+                        public User mapRow(ResultSet resultSet, int i) throws SQLException {
+                            User user1 = new User();
+                            user1.setCompany(resultSet.getString("company"));
+                            user1.setUsername(resultSet.getString("username"));
+                            user1.setRealname(resultSet.getString("realname"));
+                            user1.setEmail(resultSet.getString("email"));
+                            return user1;
+                        }
+                    });
+            }
+            catch (Exception e)
+            {
+                e.printStackTrace();
+            }
+            if (user == null) {
+                logger.error("Username : [{}] Is Null -----> Please Check！", username);
+                return "page-login";
+            }
+        }        
         HttpSession session = httpServletRequest.getSession();
         session.setAttribute(Constants.USER_SESSION, user);
-
         return "index";
     }
 
@@ -113,12 +118,15 @@ public class ViewController {
 
 
     @RequestMapping(value = {"/data/tables"})
-    public String dataTables(HttpServletRequest httpServletRequest, Map<String,Object> model)
+    public String dataTables(HttpServletRequest httpServletRequest, Map<String,Object> model,
+					    				@RequestParam(value ="name", required=false) String name,
+					    				@RequestParam(value ="value", required=false) String value)
     {
         List<User> list = jdbcTemplate.query("SELECT * FROM t_user", new UserRowMapper() {});
         model.put("userList",list);
         return "table-data-table";
     }
+    
 
     @RequestMapping(value = {"/edit"})
     public String toEditUserView(HttpServletRequest httpServletRequest,

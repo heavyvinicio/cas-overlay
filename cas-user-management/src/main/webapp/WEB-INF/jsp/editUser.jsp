@@ -2,19 +2,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <html>
   <head>
-    <meta name="description" content="Vali is a responsive and free admin theme built with Bootstrap 4, SASS and PUG.js. It's fully customizable and modular.">
-    <!-- Twitter meta-->
-    <meta property="twitter:card" content="summary_large_image">
-    <meta property="twitter:site" content="@pratikborsadiya">
-    <meta property="twitter:creator" content="@pratikborsadiya">
-    <!-- Open Graph Meta-->
-    <meta property="og:type" content="website">
-    <meta property="og:site_name" content="Vali Admin">
-    <meta property="og:title" content="Vali - Free Bootstrap 4 admin theme">
-    <meta property="og:url" content="http://pratikborsadiya.in/blog/vali-admin">
-    <meta property="og:image" content="http://pratikborsadiya.in/blog/vali-admin/hero-social.png">
-    <meta property="og:description" content="Vali is a responsive and free admin theme built with Bootstrap 4, SASS and PUG.js. It's fully customizable and modular.">
-    <title>Form Samples - Vali Admin</title>
+    <title>UUSafe 用户管理</title>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -84,68 +72,49 @@
           <li class="breadcrumb-item"><a href="#">Form Components</a></li>
         </ul>
       </div>
+     <form method="post" action="/user/edit">
       <div class="row">
         <div class="col-md-12">
           <div class="tile">
             <div class="row">
               <div class="col-lg-6">
-                <form method="post" action="/user/edit">
-
+				 <input type="hidden" name="id" value="${user.id}">
+			     <div class="form-group">
+                      <label class="control-label" for="disabledInput">公司</label>
+                      <input class="form-control"  name="company" id="company" value="${user.company}" 
+                      disabled="disabled"  >
+                 </div>
+                  
                   <div class="form-group">
-                    <label for="company">Company</label>
-                    <input class="form-control" id="company" name="company" type="company"  value="${user.company}"
-                            placeholder="Company">
+	                    <label for="company">账号</label>
+	                    <input class="form-control" id="username" name="username" value="${user.username}"
+	                           placeholder="UserName" disabled="disabled">
                   </div>
 
                   <div class="form-group">
-                    <label for="company">UserName</label>
-                    <input class="form-control" id="username" name="username" type="username"  value="${user.username}"
-                           placeholder="UserName">
-                  </div>
-
-                  <div class="form-group">
-                    <label for="realname">UserName</label>
-                    <input class="form-control" id="realname" name="realname" type="realname"  value="${user.realname}"
+                    <label for="realname">姓名</label>
+                    <input class="form-control" id="realname" name="realname" value="${user.realname}"
                            placeholder="RlealName">
                   </div>
 
                   <div class="form-group">
-                    <label for="email">Email address</label>
-                    <input class="form-control" id="email" type="email" value="${user.email}"
+                    <label for="email">邮箱</label>
+                    <input class="form-control" id="email" name="email" type="email" value="${user.email}"
                            aria-describedby="emailHelp" placeholder="Enter email">
                     <small class="form-text text-muted" id="emailHelp">We'll never share your email with anyone else.</small>
                   </div>
+                  
                   <div class="form-group">
-                    <label for="Password">Password</label>
+                    <label for="Password">密码</label>
                     <input class="form-control" id="Password" name="password" type="password" value="${user.password}"
                            placeholder="Password">
                   </div>
-                  <%--<div class="form-group">--%>
-                    <%--<label for="exampleSelect1">Example select</label>--%>
-                    <%--<select class="form-control" id="exampleSelect1">--%>
-                      <%--<option>1</option>--%>
-                      <%--<option>2</option>--%>
-                      <%--<option>3</option>--%>
-                      <%--<option>4</option>--%>
-                      <%--<option>5</option>--%>
-                    <%--</select>--%>
-                  <%--</div>--%>
-
-                  <%--<div class="form-group">--%>
-                    <%--<label for="exampleSelect2">Example multiple select</label>--%>
-                    <%--<select class="form-control" id="exampleSelect2" multiple="">--%>
-                      <%--<option>1</option>--%>
-                      <%--<option>2</option>--%>
-                      <%--<option>3</option>--%>
-                      <%--<option>4</option>--%>
-                      <%--<option>5</option>--%>
-                    <%--</select>--%>
-                  <%--</div>--%>
 
                   <div class="form-group">
                     <label for="exampleTextarea">Example textarea</label>
                     <textarea class="form-control" id="exampleTextarea" rows="3"></textarea>
                   </div>
+                  <!--  
                   <div class="form-group">
                     <label for="exampleInputFile">File input</label>
                     <input class="form-control-file" id="exampleInputFile" type="file" aria-describedby="fileHelp"><small class="form-text text-muted" id="fileHelp">This is some placeholder block-level help text for the above input. It's a bit lighter and easily wraps to a new line.</small>
@@ -173,10 +142,10 @@
                       <input class="form-check-input" type="checkbox">Check me out
                     </label>
                   </div>
-                </form>
+                    -->
               </div>
+            
               <div class="col-lg-4 offset-lg-1">
-                <form>
                   <div class="form-group">
                     <fieldset disabled="">
                       <label class="control-label" for="disabledInput">Disabled input</label>
@@ -203,6 +172,7 @@
                     <label class="col-form-label col-form-label-lg" for="inputLarge">Large input</label>
                     <input class="form-control form-control-lg" id="inputLarge" type="text">
                   </div>
+                  <!-- 
                   <div class="form-group">
                     <label class="col-form-label" for="inputDefault">Default input</label>
                     <input class="form-control" id="inputDefault" type="text">
@@ -222,7 +192,7 @@
                       </div>
                     </div>
                   </div>
-                </form>
+                   -->
               </div>
             </div>
             <div class="tile-footer">
@@ -231,6 +201,7 @@
           </div>
         </div>
       </div>
+   	 </form>
     </main>
     <!-- Essential javascripts for application to work-->
     <script src="${pageContext.request.contextPath}/js/jquery-3.2.1.min.js"></script>
