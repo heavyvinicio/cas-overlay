@@ -9,7 +9,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- Main CSS-->
     <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/main.css">
-    <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/page.css">
     <!-- Font-icon css-->
     <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
      <!-- Essential javascripts for application to work-->
@@ -17,11 +16,13 @@
     <script src="${pageContext.request.contextPath}/js/popper.min.js"></script>
     <script src="${pageContext.request.contextPath}/js/bootstrap.min.js"></script>
     <script src="${pageContext.request.contextPath}/js/main.js"></script>
-    <!-- The javascript plugin to display page loading on top
+    <!-- The javascript plugin to display page loading on top -->
     <script src="${pageContext.request.contextPath}/js/plugins/pace.min.js"></script>
-    -->
+
     <!-- Data table plugin -->
-    <script src="${pageContext.request.contextPath}/js/plugins/vue.min.js"></script>
+    <script src="${pageContext.request.contextPath}/js/plugins/jquery.dataTables.min.js"></script>
+    <script src="${pageContext.request.contextPath}/js/plugins/dataTables.bootstrap.min.js"></script>
+
 
   </head>
   <body class="app sidebar-mini rtl">
@@ -88,7 +89,7 @@
         <div class="col-md-12">
           <div class="tile">
             <div class="tile-body">
-              <table class="table table-striped" >
+              <table class="table table-striped" id="simaptable">
                 <thead>
                   <tr>
                     <th><span>序号</span></th>
@@ -97,121 +98,61 @@
                     <th><span>邮件</span></th>
                   </tr>
                 </thead>
-                <tbody>
-                  <tr v-for="item in listData">
-                    <td>{{item.bbbb}}</td>
-                  </tr>
-                </tbody>
               </table>
-           		<div>
-				    <div>
-				      <div class="page"  v-show="show">
-				        <div class="pagelist">
-				          <span class="jump" :class="{disabled:pstart}" @click="{current_page--}">上一页</span>
-				          <span v-show="current_page>5" class="jump" @click="jumpPage(1)">1</span>
-				          <span class="ellipsis"  v-show="efont">...</span>
-				          <span class="jump" v-for="num in indexs" :class="{bgprimary:current_page==num}" @click="jumpPage(num)">{{num}}</span>
-				          <span class="ellipsis"  v-show="ebehind">...</span>
-				
-				          <span :class="{disabled:pend}" class="jump" @click="{current_page++}">下一页</span>
-				          <span v-show="current_page<pages-4" class="jump" @click="jumpPage(pages)">{{pages}}</span>
-				
-				          <span class="jumppoint">跳转到：</span>
-				          <span class="jumpinp"><input type="text" v-model="changePage"></span>
-				          <span class="jump gobtn" @click="jumpPage(changePage)">GO</span>
-				        </div>
-				      </div>
-				    </div>
-				  </div>
             </div>
           </div>
         </div>
       </div>
     </main>
     <script type="text/javascript">
-    var newlist = new Vue({
-        el: '#app',
-        data: {
-          current_page: 1, //当前页
-          pages: 50, //总页数
-          changePage:'',//跳转页
-          nowIndex:0,
-          listData:[]
-        },
-        computed:{
-           show:function(){
-               return this.pages && this.pages !=1
-           },
-           pstart: function() {
-             return this.current_page == 1;
-           },
-           pend: function() {
-             return this.current_page == this.pages;
-           },
-           efont: function() {
-             if (this.pages <= 7) return false;
-             return this.current_page > 5
-           },
-           ebehind: function() {
-             if (this.pages <= 7) return false;
-             var nowAy = this.indexs;
-             return nowAy[nowAy.length - 1] != this.pages;
-           },
-           indexs: function() {
-             var left = 1,
-               right = this.pages,
-               ar = [];
-             if (this.pages >= 7) {
-               if (this.current_page > 5 && this.current_page < this.pages - 4) {
-                 left = Number(this.current_page) - 3;
-                 right = Number(this.current_page) + 3;
-               } else {
-                 if (this.current_page <= 5) {
-                   left = 1;
-                   right = 7;
-                 } else {
-                   right = this.pages;
-                   left = this.pages - 6;
-                 }
-               }
-             }
-             while (left <= right) {
-               ar.push(left);
-               left++;
-             }
-             return ar;
-           },
-         },
-        methods: {
-          jumpPage: function(id) {
-       	  	var ival = parseInt(id);//如果变量val是字符类型的数则转换为int类型 如果不是则ival为NaN
-      	    if (!isNaN(ival)) {
-      	      	this.current_page = id;
-      	      	this.getListDate()
-      	    } 
-          },
-          getListDate: function(index) {
-        	  const data = {
-        		name: "name",
-        		value: "value"
-        	  };
-        	  $.ajax({
-	                type: "post",
-	                data: data,
-	                url: "/user/data/list",
-	                dataType: "json",
-	                success: function(d) {
-	                	this.listData = [],
-                        console.log("listData",d.bbbb);
-	                },
-	                error: function(e) {
-	                	console.log("error", e);
-	                }
-          		});
-          },
-        },
+        $(document).ready(function() {
+          $('#simaptable').dataTable({
+              "bProcessing": false, // 是否显示取数据时的那个等待提示
+              "bServerSide": true,//这个用来指明是通过服务端来取数据
+              "bPaginate": true,  //是否显示分页
+              "sAjaxSource": "/user/getList",//这个是请求的地址
+              "fnServerData": retrieveData, // 获取数据的处理函数
+              "aoColumns": [
+                  { "mData": "id"},
+                  { "mData": "company"},
+                  { "mData": "realname"},
+                  { "mData": "email"},
+              ],//对应表格中的每一列
+              "ordering":false, //开启排序
+              "oLanguage": {
+                  "sLengthMenu": "每页显示 _MENU_ 条记录",
+                  "sZeroRecords": "抱歉， 没有找到",
+                  "sInfo": "从 _START_ 到 _END_ /共 _TOTAL_ 条数据",
+                  "sInfoEmpty": "没有数据",
+                  "sSearch" : "查询",
+                  "sInfoFiltered": "(从 _MAX_ 条数据中检索)",
+                  "oPaginate": {
+                      "sFirst": "首页",
+                      "sPrevious": "前一页",
+                      "sNext": "后一页",
+                      "sLast": "尾页"
+                  },
+                }
+            })
 
-      })
+            function retrieveData( sSource,aoData, fnCallback) {
+                $.ajax({
+                    url: sSource,//这个就是请求地址对应sAjaxSource
+                    data: {"aoData": JSON.stringify(aoData)},//这个是把datatable的一些基本数据传给后台,比如起始位置,每页显示的行数
+                    type: 'post',
+                    dataType: 'json',
+                    async: false,
+                    success: function (result) {
+                        fnCallback(result);//把返回的数据传给这个方法就可以了,datatable会自动绑定数据的
+                    },
+                    error: function (msg) {
+                    }
+                })
+            }
+
+        });
+
+
 
     </script>
     <!-- Google analytics script-->

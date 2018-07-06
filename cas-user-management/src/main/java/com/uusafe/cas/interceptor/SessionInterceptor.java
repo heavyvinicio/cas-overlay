@@ -18,12 +18,10 @@ public class SessionInterceptor implements HandlerInterceptor{
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-        if (!request.getRequestURI().contains("/login")) {
-            User user = (User) request.getSession().getAttribute(Constants.USER_SESSION);
-            if (null == user) {
-                response.sendRedirect("/login");
-                return false;
-            }
+        User user = (User) request.getSession().getAttribute(Constants.USER_SESSION);
+        if (!request.getRequestURI().contains("/login") && user == null) {
+            response.sendRedirect("/login");
+            return false;
         }
         return  true;
     }

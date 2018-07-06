@@ -24,7 +24,7 @@ public class CasConfig {
     @Autowired
     CasClientAutoConfig autoconfig;
 
-    private static boolean casEnabled  = true;
+    private static boolean casEnabled  = false;
 
     @Bean
     public CasClientAutoConfig getSpringCasAutoconfig(){

@@ -1,10 +1,7 @@
 package com.uusafe.cas.controller;
 
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -15,6 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -47,23 +45,6 @@ public class UserController {
 		return "";
 	}
 	
-	
-	@RequestMapping(value = "/data/list")
-	@ResponseBody
-    public ResponseEntity<String> dataTables(HttpServletRequest httpServletRequest, Map<String,Object> model,
-					    				@RequestParam(value ="name", required=false) String name,
-					    				@RequestParam(value ="value", required=false) String value)
-    {
-        List<User> list = jdbcTemplate.query("SELECT * FROM t_user", new UserRowMapper() {});
-        model.put("userList",list);
-        JSONArray array = new JSONArray();
-        JSONObject  json = new JSONObject();
-        json.put("bbbb", "ccccccc");
-        array.add(json);
-        ResponseEntity<String> response = new ResponseEntity<String>(array.toString(), HttpStatus.OK);
-        return response;
-    }
-	
 	@RequestMapping(value = "/edit")
     public ModelAndView editUser(@ModelAttribute User user)
     {
@@ -88,4 +69,61 @@ public class UserController {
 		return "";
 	}
 
+
+	@RequestMapping(value = "/getList")
+	@ResponseBody
+	public String getList(@RequestParam String aoData) {
+		//json格式化用的是fastjson
+		JSONArray jsonarray=(JSONArray) JSONArray.parse(aoData);
+		String sEcho = null;
+		// 起始索引
+		int iDisplayStart = 0;
+		// 每页显示的行数
+		int iDisplayLength = 10;
+
+		//搜索栏
+		String search = "";
+		for (int i = 0; i < jsonarray.size(); i++) {
+			JSONObject obj = (JSONObject) jsonarray.get(i);
+			if ("sEcho".equals(obj.get("name")))
+				sEcho = obj.get("value").toString();
+
+			if ("iDisplayStart".equals(obj.get("name")))
+				iDisplayStart =Integer.parseInt(obj.get("value").toString());
+
+			if ("iDisplayLength".equals(obj.get("name")))
+				iDisplayLength = Integer.parseInt(obj.get("value").toString());
+
+			if ("sSearch".equals(obj.get("name")))
+				search = obj.get("value").toString();
+		}
+		StringBuilder queyWhere = new StringBuilder();
+		if(!StringUtils.isEmpty(search))
+		{
+			queyWhere.append(" WHERE ")
+					.append(" company like ").append("\'%"+search+"%\'").append(" OR ")
+					.append(" realname like ").append("\'%"+search+"%\'").append(" OR ")
+					.append(" email    like ").append("\'%"+search+"%\'");
+		}
+		logger.debug(" SQL QueyWhere  [{}]", queyWhere.toString());
+		int iTotalRecords = jdbcTemplate.queryForObject("SELECT COUNT(*) FROM t_user"+queyWhere.toString(), int.class);
+		List<User> list = jdbcTemplate.query("SELECT * FROM t_user "+queyWhere.toString()+" limit "+iDisplayStart+","+iDisplayLength,
+				new UserRowMapper() {});
+		JSONObject getObj = new JSONObject();
+
+		// DataTable前台必须要的
+		getObj.put("sEcho", sEcho);
+
+		//实际的行数，调用查询总记录数的方法
+		getObj.put("iTotalRecords",iTotalRecords);
+
+		//显示的行数,这个要和上面写的一样
+		getObj.put("iTotalDisplayRecords",iTotalRecords);
+
+		//把查到数据装入aaData,要以JSON格式返回
+		getObj.put("aaData", list);
+
+
+		return JSONObject.toJSONString(getObj);
+	}
 }
