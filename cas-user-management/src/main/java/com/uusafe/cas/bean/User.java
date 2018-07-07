@@ -1,5 +1,6 @@
 package com.uusafe.cas.bean;
 
+import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -56,6 +57,27 @@ public class User {
     public  static final String DISABLE = "disable";
 
     private int disable;
+
+    public  static final String CREATEBY = "createby";
+
+    private String createby;
+
+    public  static final String CREATETIME = "createtime";
+
+    private Timestamp createtime;
+
+    public  static final String UPDATEBY = "updateby";
+
+    private String updateby;
+
+    public  static final String UPDATETIME = "updatetime";
+
+    private Timestamp updatetime;
+
+    public  static final String LASTLOGINTIME = "lastlogintime";
+
+    private Timestamp lastlogintime;
+
 
     public int getId() {
         return id;
@@ -129,14 +151,63 @@ public class User {
         this.disable = disable;
     }
 
-            
-	@Override
-	public String toString() {
-		return "User [id=" + id + ", company=" + company + ", username="
-				+ username + ", password=" + password + ", realname="
-				+ realname + ", email=" + email + ", lock=" + lock
-				+ ", invali=" + invali + ", disable=" + disable + "]";
-	}
-    
-    
+    public String getCreateby() {
+        return createby;
+    }
+
+    public void setCreateby(String createby) {
+        this.createby = createby;
+    }
+
+    public Timestamp getCreatetime() {
+        return createtime;
+    }
+
+    public void setCreatetime(Timestamp createtime) {
+        this.createtime = createtime;
+    }
+
+    public String getUpdateby() {
+        return updateby;
+    }
+
+    public void setUpdateby(String updateby) {
+        this.updateby = updateby;
+    }
+
+    public Timestamp getUpdatetime() {
+        return updatetime;
+    }
+
+    public void setUpdatetime(Timestamp updatetime) {
+        this.updatetime = updatetime;
+    }
+
+    public Timestamp getLastlogintime() {
+        return lastlogintime;
+    }
+
+    public void setLastlogintime(Timestamp lastlogintime) {
+        this.lastlogintime = lastlogintime;
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", company='" + company + '\'' +
+                ", username='" + username + '\'' +
+                ", password='" + password + '\'' +
+                ", realname='" + realname + '\'' +
+                ", email='" + email + '\'' +
+                ", lock=" + lock +
+                ", invali=" + invali +
+                ", disable=" + disable +
+                ", createby='" + createby + '\'' +
+                ", createtime=" + createtime +
+                ", updateby='" + updateby + '\'' +
+                ", updatetime=" + updatetime +
+                ", lastlogintime=" + lastlogintime +
+                '}';
+    }
 }

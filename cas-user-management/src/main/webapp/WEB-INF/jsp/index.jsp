@@ -76,7 +76,7 @@
           <div class="widget-small primary coloured-icon"><i class="icon fa fa-users fa-3x"></i>
             <div class="info">
               <h4>Users</h4>
-              <p><b>5</b></p>
+              <p><b>${requestScope.iTotalUser}</b></p>
             </div>
           </div>
         </div>

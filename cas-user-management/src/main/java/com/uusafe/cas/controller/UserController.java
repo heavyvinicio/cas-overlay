@@ -1,16 +1,11 @@
 package com.uusafe.cas.controller;
 
-import java.sql.SQLException;
 import java.util.*;
 
-import javax.servlet.http.HttpServletRequest;
-
+import com.uusafe.cas.service.UserServiceDao;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -18,11 +13,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
-
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.uusafe.cas.Util.BeanUtil;
-import com.uusafe.cas.Util.UserRowMapper;
 import com.uusafe.cas.bean.User;
 
 /**
@@ -35,7 +28,7 @@ public class UserController {
     private static final Logger logger = LoggerFactory.getLogger(UserController.class);
 	  
 	@Autowired
-	public JdbcTemplate jdbcTemplate;
+	public UserServiceDao userServiceImp;
 	
 	@Autowired
 	public BeanUtil beanUtil;
@@ -48,19 +41,8 @@ public class UserController {
 	@RequestMapping(value = "/edit")
     public ModelAndView editUser(@ModelAttribute User user)
     {
-		logger.warn("form user info [{}]", user.toString());
-		Collection<String> exclud = new ArrayList<String>();
-		exclud.add(User.ID);
-		exclud.add(User.COMPANY);
-		exclud.add(User.USERNAME);
-		exclud.add(User.LOCK);
-		exclud.add(User.DISABLE);
-		exclud.add(User.INVALI);
-		String sql = beanUtil.getUpdatedSQLbyBean(User.class, "t_user", exclud, User.ID);
-		logger.warn("sql [{}]", sql);
-		int i = jdbcTemplate.update(sql, user.getPassword(), user.getRealname(), user.getEmail(), user.getId());
-		logger.warn("sql 执行成功结果 [{}]", i );
-		
+		boolean result =  userServiceImp.updateUser(user);
+		logger.debug(" UPDATE UserInfo Result [{}]", result);
         return new ModelAndView("redirect:/data/tables");
     }
 
@@ -80,37 +62,41 @@ public class UserController {
 		int iDisplayStart = 0;
 		// 每页显示的行数
 		int iDisplayLength = 10;
-
 		//搜索栏
 		String search = "";
 		for (int i = 0; i < jsonarray.size(); i++) {
 			JSONObject obj = (JSONObject) jsonarray.get(i);
-			if ("sEcho".equals(obj.get("name")))
-				sEcho = obj.get("value").toString();
-
-			if ("iDisplayStart".equals(obj.get("name")))
-				iDisplayStart =Integer.parseInt(obj.get("value").toString());
-
-			if ("iDisplayLength".equals(obj.get("name")))
-				iDisplayLength = Integer.parseInt(obj.get("value").toString());
-
-			if ("sSearch".equals(obj.get("name")))
-				search = obj.get("value").toString();
+			String name = obj.get("name").toString();
+			switch (name){
+				case "sEcho":
+					sEcho = obj.get("value").toString();
+					break;
+				case "iDisplayStart":
+					iDisplayStart =Integer.parseInt(obj.get("value").toString());
+					break;
+				case "iDisplayLength":
+					iDisplayLength = Integer.parseInt(obj.get("value").toString());
+					break;
+				case "sSearch":
+					search = obj.get("value").toString();
+					break;
+				default:
+					break;
+			}
 		}
-		StringBuilder queyWhere = new StringBuilder();
+		StringBuilder queryWhere = new StringBuilder();
 		if(!StringUtils.isEmpty(search))
 		{
-			queyWhere.append(" WHERE ")
+			queryWhere.append(" WHERE ")
 					.append(" company like ").append("\'%"+search+"%\'").append(" OR ")
 					.append(" realname like ").append("\'%"+search+"%\'").append(" OR ")
 					.append(" email    like ").append("\'%"+search+"%\'");
 		}
-		logger.debug(" SQL QueyWhere  [{}]", queyWhere.toString());
-		int iTotalRecords = jdbcTemplate.queryForObject("SELECT COUNT(*) FROM t_user"+queyWhere.toString(), int.class);
-		List<User> list = jdbcTemplate.query("SELECT * FROM t_user "+queyWhere.toString()+" limit "+iDisplayStart+","+iDisplayLength,
-				new UserRowMapper() {});
-		JSONObject getObj = new JSONObject();
+		logger.debug(" SQL QueyWhere  [{}]", queryWhere.toString());
 
+		int iTotalRecords = userServiceImp.iTotalUser(queryWhere.toString());
+		List<User> list = (List<User>) userServiceImp.getAllUsers(iDisplayStart, iDisplayLength, queryWhere.toString());
+		JSONObject getObj = new JSONObject();
 		// DataTable前台必须要的
 		getObj.put("sEcho", sEcho);
 
@@ -122,7 +108,6 @@ public class UserController {
 
 		//把查到数据装入aaData,要以JSON格式返回
 		getObj.put("aaData", list);
-
 
 		return JSONObject.toJSONString(getObj);
 	}

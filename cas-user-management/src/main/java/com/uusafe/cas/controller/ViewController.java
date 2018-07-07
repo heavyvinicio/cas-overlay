@@ -5,6 +5,7 @@ import com.uusafe.cas.Util.FullUser;
 import com.uusafe.cas.Util.SafePasswordEncoder;
 import com.uusafe.cas.Util.UserRowMapper;
 import com.uusafe.cas.bean.User;
+import com.uusafe.cas.service.UserServiceDao;
 import org.jasig.cas.client.authentication.AttributePrincipal;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,7 +38,7 @@ public class ViewController {
     private static final Logger logger = LoggerFactory.getLogger(ViewController.class);
 
     @Autowired
-    protected JdbcTemplate jdbcTemplate;
+    protected UserServiceDao userServiceImp;
 
     @Autowired
     protected SafePasswordEncoder safePasswordEncoder;
@@ -50,6 +51,9 @@ public class ViewController {
      */
     @RequestMapping(value = {"/", "/index"})
     public String index(HttpServletRequest httpServletRequest, Map<String, Object> model) {
+        //获取用户数量
+        int iTotalUser = userServiceImp.iTotalUser();
+        model.put("iTotalUser" ,iTotalUser);
         return "index";
     }
 
@@ -72,31 +76,17 @@ public class ViewController {
                 return "page-login";
             }
             String encodePassword = safePasswordEncoder.encode(password);
-            try {
-                user = jdbcTemplate.queryForObject("SELECT company, username, realname, email FROM T_User WHERE username = ? AND password = ?",
-                        new String[]{username, encodePassword}, new RowMapper<User>() {
-                            @Nullable
-                            @Override
-                            public User mapRow(ResultSet resultSet, int i) throws SQLException {
-                                User user1 = new User();
-                                user1.setCompany(resultSet.getString("company"));
-                                user1.setUsername(resultSet.getString("username"));
-                                user1.setRealname(resultSet.getString("realname"));
-                                user1.setEmail(resultSet.getString("email"));
-                                return user1;
-                            }
-                        });
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+            user = userServiceImp.getUserInfo("", username, encodePassword);
             if (user == null) {
                 logger.error("Username : [{}] Is Null -----> Please Check！", username);
                 return "page-login";
             }
         }
+        //刷新用户最后上线时间
+
         HttpSession session = httpServletRequest.getSession();
         session.setAttribute(Constants.USER_SESSION, user);
-        return "index";
+        return "redirect:/index";
     }
 
 
@@ -108,7 +98,7 @@ public class ViewController {
 
     @RequestMapping(value = {"/basic/tables"})
     public String basicTables(HttpServletRequest httpServletRequest, Map<String, Object> model) {
-        List<User> list = jdbcTemplate.query("SELECT * FROM t_user", new UserRowMapper());
+        List<User> list = (List<User>) userServiceImp.getAllUsers();
         model.put("simpleList", list);
         return "table-basic";
     }
@@ -118,8 +108,7 @@ public class ViewController {
     public String dataTables(HttpServletRequest httpServletRequest, Map<String, Object> model,
                              @RequestParam(value = "name", required = false) String name,
                              @RequestParam(value = "value", required = false) String value) {
-        List<User> list = jdbcTemplate.query("SELECT * FROM t_user", new UserRowMapper() {
-        });
+        List<User> list = (List<User>) userServiceImp.getAllUsers();
         model.put("userList", list);
         return "table-data-table";
     }
@@ -130,14 +119,8 @@ public class ViewController {
                                  Map<String, Object> model,
                                  @RequestParam(value = "userid", required = true) int userid) {
         System.out.println(String.format("userid {%d}", userid));
-
-        User user = null;
-        try {
-            user = jdbcTemplate.queryForObject("SELECT * FROM T_User WHERE id =?",
-                    new Object[]{userid}, new UserRowMapper());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        User user = userServiceImp.getUserInfo(userid);
+        logger.debug(" GET UserInfo [{}]", user);
         model.put("user", user);
         return "editUser";
     }

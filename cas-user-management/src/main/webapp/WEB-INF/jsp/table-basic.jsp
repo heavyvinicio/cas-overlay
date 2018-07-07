@@ -86,25 +86,15 @@
         <div class="col-md-6">
           <div class="tile">
             <h3 class="tile-title">Simple Table</h3>
-            <table class="table">
+            <table class="table table-striped" id="simaptable">
               <thead>
                 <tr>
-                  <th>序号</th>
-                  <th>Conpany</th>
-                  <th>Name</th>
-                  <th>Email</th>
+                  <th><span>序号</span></th>
+                  <th><span>用户名</span></th>
+                  <th><span>邮件</span></th>
+                  <th><span>手机</span></th>
                 </tr>
               </thead>
-              <tbody>
-                <c:forEach var="user" items="${simpleList}" varStatus="seq" >
-                  <tr>
-                    <th>${seq.index}</th>
-                    <th>${user.company}</th>
-                    <th>${user.realname}</th>
-                    <th>${user.email}</th>
-                  </tr>
-                </c:forEach>
-              </tbody>
             </table>
           </div>
         </div>
@@ -357,6 +347,57 @@
     <!-- The javascript plugin to display page loading on top-->
     <script src="${pageContext.request.contextPath}/js/plugins/pace.min.js"></script>
     <!-- Page specific javascripts-->
+    <!-- Data table plugin -->
+    <script src="${pageContext.request.contextPath}/js/plugins/jquery.dataTables.min.js"></script>
+    <script src="${pageContext.request.contextPath}/js/plugins/dataTables.bootstrap.min.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $('#simaptable').dataTable({
+                "bProcessing": false, // 是否显示取数据时的那个等待提示
+                "bServerSide": true,//这个用来指明是通过服务端来取数据
+                "bPaginate": true,  //是否显示分页
+                "sAjaxSource": "/user/getList",//这个是请求的地址
+                "fnServerData": retrieveData, // 获取数据的处理函数
+                "aoColumns": [
+                    { "mData": "id"},
+                    { "mData": "realname"},
+                    { "mData": "email"},
+                    { "mData": "realname"},
+                ],//对应表格中的每一列
+                "ordering":false, //开启排序
+                "oLanguage": {
+                    "sLengthMenu": "每页显示 _MENU_ 条记录",
+                    "sZeroRecords": "抱歉， 没有找到",
+                    "sInfo": "从 _START_ 到 _END_ /共 _TOTAL_ 条数据",
+                    "sInfoEmpty": "没有数据",
+                    "sSearch" : "查询",
+                    "sInfoFiltered": "(从 _MAX_ 条数据中检索)",
+                    "oPaginate": {
+                        "sFirst": "首页",
+                        "sPrevious": "前一页",
+                        "sNext": "后一页",
+                        "sLast": "尾页"
+                    },
+                }
+            })
+
+            function retrieveData( sSource,aoData, fnCallback) {
+                $.ajax({
+                    url: sSource,//这个就是请求地址对应sAjaxSource
+                    data: {"aoData": JSON.stringify(aoData)},//这个是把datatable的一些基本数据传给后台,比如起始位置,每页显示的行数
+                    type: 'post',
+                    dataType: 'json',
+                    async: false,
+                    success: function (result) {
+                        fnCallback(result);//把返回的数据传给这个方法就可以了,datatable会自动绑定数据的
+                    },
+                    error: function (msg) {
+                    }
+                })
+            }
+
+        });
+    </script>
     <!-- Google analytics script-->
     <script type="text/javascript">
       if(document.location.hostname == 'pratikborsadiya.in') {

@@ -96,6 +96,7 @@
                     <th><span>公司</span></th>
                     <th><span>用户名</span></th>
                     <th><span>邮件</span></th>
+                    <th><span>手机</span></th>
                   </tr>
                 </thead>
               </table>
@@ -117,7 +118,16 @@
                   { "mData": "company"},
                   { "mData": "realname"},
                   { "mData": "email"},
+                  { "mData": "email"},
               ],//对应表格中的每一列
+              "aoColumnDefs":[
+                  {"aTargets":[2],"mRender":function(data,type,full){
+                      console.log('type', type)
+                      console.log('full', full)
+                      return "<a href=\"/edit?userid=" + full.id+"\">" + data + "</a>";
+                    }
+                  },
+              ],
               "ordering":false, //开启排序
               "oLanguage": {
                   "sLengthMenu": "每页显示 _MENU_ 条记录",
@@ -151,9 +161,6 @@
             }
 
         });
-
-
-
     </script>
     <!-- Google analytics script-->
     <script type="text/javascript">
