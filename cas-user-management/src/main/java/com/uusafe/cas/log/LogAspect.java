@@ -24,12 +24,11 @@ public class LogAspect {
 
     ThreadLocal<Long> startTime = new ThreadLocal<>();
 
+    /**
+     * 设置切入点
+     */
     @Pointcut("execution(public * com.uusafe.cas.controller.*.*(..))")
-    public void webLog() {
-        System.out.println("weblog1");
-
-        System.out.println("weblog2");
-    }
+    public void webLog() { }
 
     @Before("webLog()")
     public void deBefore(JoinPoint joinPoint) throws Throwable {
