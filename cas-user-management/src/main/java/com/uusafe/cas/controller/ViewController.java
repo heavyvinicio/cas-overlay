@@ -83,6 +83,7 @@ public class ViewController {
             }
         }
         //刷新用户最后上线时间
+        System.currentTimeMillis();
 
         HttpSession session = httpServletRequest.getSession();
         session.setAttribute(Constants.USER_SESSION, user);
