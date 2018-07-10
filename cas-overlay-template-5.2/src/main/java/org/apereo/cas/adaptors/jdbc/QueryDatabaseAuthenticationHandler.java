@@ -30,21 +30,27 @@ import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataAccessException;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
 
+/**
+ * @author Zengzhx
+ * @date 2018/7/9 下午5:10
+ */
 public class QueryDatabaseAuthenticationHandler extends AbstractJdbcUsernamePasswordAuthenticationHandler {
     private static final Logger LOGGER = LoggerFactory.getLogger(QueryDatabaseAuthenticationHandler.class);
     private final String sql;
     private final String fieldPassword;
     private final String fieldExpired;
     private final String fieldDisabled;
+    private final String uid;
     private final Map<String, Collection<String>> principalAttributeMap;
 
-    public QueryDatabaseAuthenticationHandler(String name, ServicesManager servicesManager, PrincipalFactory principalFactory, Integer order, DataSource dataSource, String sql, String fieldPassword, String fieldExpired, String fieldDisabled, Map<String, Collection<String>> attributes) {
+    public QueryDatabaseAuthenticationHandler(String name, ServicesManager servicesManager, PrincipalFactory principalFactory, Integer order, DataSource dataSource, String sql, String fieldPassword, String fieldExpired, String fieldDisabled, String uid, Map<String, Collection<String>> attributes) {
         super(name, servicesManager, principalFactory, order, dataSource);
         this.sql = sql;
         this.fieldPassword = fieldPassword;
         this.fieldExpired = fieldExpired;
         this.fieldDisabled = fieldDisabled;
         this.principalAttributeMap = attributes;
+        this.uid = uid;
     }
 
     @Override
@@ -75,6 +81,14 @@ public class QueryDatabaseAuthenticationHandler extends AbstractJdbcUsernamePass
                         throw new AccountPasswordMustChangeException("Password has expired");
                     }
                 }
+
+                if (StringUtils.isNotBlank(this.uid)) {
+                    dbExpired = dbFields.get(this.uid);
+                    if (dbExpired != null) {
+                        credential.setUid(Integer.valueOf(dbFields.get(this.uid).toString()));
+                    }
+                }
+
 
                 this.principalAttributeMap.forEach((key, attributeNames) -> {
                     Object attribute = dbFields.get(key);

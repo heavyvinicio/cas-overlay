@@ -83,8 +83,8 @@ public class ViewController {
             }
         }
         //刷新用户最后上线时间
-        System.currentTimeMillis();
-
+        boolean result = userServiceImp.updateUserLastLoginTime(user);
+        logger.info("update User Last Login Time Result ---> [{}]", result);
         HttpSession session = httpServletRequest.getSession();
         session.setAttribute(Constants.USER_SESSION, user);
         return "redirect:/index";

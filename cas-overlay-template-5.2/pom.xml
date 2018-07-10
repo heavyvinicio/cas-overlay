@@ -133,6 +133,12 @@
             <version>2.5</version>
             <scope>provided</scope>
         </dependency>
+        <dependency>
+            <groupId>io.dropwizard.metrics</groupId>
+            <artifactId>metrics-annotation</artifactId>
+            <version>3.2.5</version>
+        </dependency>
+
 
     </dependencies>
 

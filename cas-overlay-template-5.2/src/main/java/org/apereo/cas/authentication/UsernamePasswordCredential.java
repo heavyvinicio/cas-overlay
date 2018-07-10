@@ -3,6 +3,7 @@ package org.apereo.cas.authentication;
 import com.sun.javafx.binding.StringFormatter;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
 
@@ -18,7 +19,6 @@ public class UsernamePasswordCredential implements Credential, Serializable {
     @Size(min = 1, message = "required.username")
     private String username;
 
-
     @Size(min = 1, message = "required.password")
     private String password;
 
@@ -28,6 +28,11 @@ public class UsernamePasswordCredential implements Credential, Serializable {
     @Size(min = 1, message = "required.authcode")
     private String authcode;
 
+    /**
+     * 设置用户id
+     * 根据id获取用户对应的数据，避免只根据用户名查询
+     */
+    private int uid =-1;
     /**
      * Default constructor.
      */
@@ -69,6 +74,10 @@ public class UsernamePasswordCredential implements Credential, Serializable {
 
     public void setAuthcode(String authcode) { this.authcode = authcode; }
 
+    public int getUid() { return uid; }
+
+    public void setUid(int uid) { this.uid = uid; }
+
     @Override
     public String getId() {
         return this.username;
@@ -76,7 +85,7 @@ public class UsernamePasswordCredential implements Credential, Serializable {
 
     @Override
     public String toString() {
-        return String.format("username %s , company %s",this.username, this.company);
+        return String.format("uid %s username %s , company %s", this.uid, this.username, this.company);
     }
 
     @Override
@@ -89,6 +98,7 @@ public class UsernamePasswordCredential implements Credential, Serializable {
         }
 
         final UsernamePasswordCredential that = (UsernamePasswordCredential) o;
+
 
         if (this.password != null ? !this.password.equals(that.password) : that.password != null) {
             return false;

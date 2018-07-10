@@ -2,6 +2,7 @@ package com.uusafe.cas.controller;
 
 import java.util.*;
 
+import com.uusafe.cas.Util.Constants;
 import com.uusafe.cas.service.UserServiceDao;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,6 +18,8 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.uusafe.cas.Util.BeanUtil;
 import com.uusafe.cas.bean.User;
+
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * @author Zengzhx
@@ -39,9 +42,11 @@ public class UserController {
 	}
 	
 	@RequestMapping(value = "/edit")
-    public ModelAndView editUser(@ModelAttribute User user)
+    public ModelAndView editUser(HttpServletRequest httpServletRequest,
+								 @ModelAttribute User user)
     {
-		boolean result =  userServiceImp.updateUser(user);
+		User currentUser = (User) httpServletRequest.getSession().getAttribute(Constants.USER_SESSION);
+		boolean result =  userServiceImp.updateUser(user, currentUser.getId());
 		logger.debug(" UPDATE UserInfo Result [{}]", result);
         return new ModelAndView("redirect:/data/tables");
     }

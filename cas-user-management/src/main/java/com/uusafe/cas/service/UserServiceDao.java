@@ -24,7 +24,9 @@ public interface UserServiceDao {
 
     boolean addUser(User... user);
 
-    boolean updateUser(User user);
+    boolean updateUser(User user, int updateBy);
+
+    boolean updateUserLastLoginTime(User user);
 
     boolean updateUser(User... user);
 

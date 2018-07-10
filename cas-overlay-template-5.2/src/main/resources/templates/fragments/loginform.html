@@ -20,7 +20,7 @@
 
         <h2 th:utext="#{screen.welcome.instructions}"></h2>
 
-
+        <input type="hidden"  th:field="*{uid}" id="uid" th:disabled="${guaEnabled}"/>
         <section class="row">
             <!--<label for="company" th:utext="#{screen.welcome.label.netid}"/>-->
             <span class="login iconSpan">

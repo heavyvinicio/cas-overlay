@@ -139,7 +139,7 @@ public class CasJdbcAuthenticationConfiguration {
         final QueryDatabaseAuthenticationHandler h = new QueryDatabaseAuthenticationHandler(b.getName(), servicesManager,
                 jdbcPrincipalFactory(), b.getOrder(),
                 JpaBeans.newDataSource(b), b.getSql(), b.getFieldPassword(),
-                b.getFieldExpired(), b.getFieldDisabled(),
+                b.getFieldExpired(), b.getFieldDisabled(), b.getUid(),
                 CollectionUtils.wrap(attributes));
 
         h.setPasswordEncoder(PasswordEncoderUtils.newPasswordEncoder(b.getPasswordEncoder()));
