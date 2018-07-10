@@ -96,6 +96,7 @@ public class ChainingPrincipalResolver implements PrincipalResolver {
                 .collect(Collectors.toSet()).size();
 
         if (count > 2) {
+//        if (count > 1) {
             throw new PrincipalException("Resolved principals by the chain are not unique because principal resolvers have produced CAS principals "
                     + "with different identifiers which typically is the result of a configuration issue.",
                     new HashMap<>(0),

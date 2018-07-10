@@ -85,7 +85,7 @@ public class UsernamePasswordCredential implements Credential, Serializable {
 
     @Override
     public String toString() {
-        return String.format("uid %s username %s , company %s", this.uid, this.username, this.company);
+        return String.format("uid:[%s], username:[%s], company:[%s]", this.uid, this.username, this.company);
     }
 
     @Override
