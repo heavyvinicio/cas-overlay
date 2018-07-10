@@ -139,6 +139,12 @@
             <version>3.2.5</version>
         </dependency>
 
+        <!-- cas 的redis依赖 -->
+        <dependency>
+            <groupId>org.apereo.cas</groupId>
+            <artifactId>cas-server-support-redis-ticket-registry</artifactId>
+            <version>${cas.version}</version>
+        </dependency>
 
     </dependencies>
 
